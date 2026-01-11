@@ -1,0 +1,49 @@
+{
+  "name": "chord-id",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "electron:dev": "electron-vite dev",
+    "electron:build": "electron-vite build",
+    "electron:preview": "electron-vite preview",
+    "electron:dist": "electron-vite build && electron-builder --win"
+  },
+  "author": {
+    "name": "Chord-ID",
+    "email": "dev@example.com"
+  },
+  "description": "Real-time MIDI chord identification with visual piano display",
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vitejs/plugin-react": "^4.7.0",
+    "electron-updater": "^6.7.3",
+    "framer-motion": "^12.25.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "smplr": "^0.16.3",
+    "tailwindcss": "^4.1.18",
+    "three": "^0.182.0",
+    "tonal": "^6.4.2",
+    "tone": "^15.1.22",
+    "vite": "^6.4.1",
+    "webmidi": "^3.1.14"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.182.0",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.4.0",
+    "electron-vite": "^3.1.0",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5",
+    "typescript": "^5.9.3"
+  }
+}
