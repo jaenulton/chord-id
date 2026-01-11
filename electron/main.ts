@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } from 'electron';
+import { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, session } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 
@@ -11,6 +11,15 @@ autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
 function createWindow() {
+  // Enable MIDI permissions
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'midi' || permission === 'midiSysex') {
+      callback(true);
+    } else {
+      callback(true); // Allow other permissions too
+    }
+  });
+
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
