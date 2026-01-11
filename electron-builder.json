@@ -35,5 +35,9 @@
     "createStartMenuShortcut": true,
     "shortcutName": "Chord-ID"
   },
-  "publish": null
+  "publish": {
+    "provider": "github",
+    "owner": "jaenulton",
+    "repo": "chord-id"
+  }
 }

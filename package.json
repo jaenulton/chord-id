@@ -14,8 +14,12 @@
     "electron:dist": "electron-vite build && electron-builder --win"
   },
   "author": {
-    "name": "Chord-ID",
-    "email": "dev@example.com"
+    "name": "Jae_Nulton",
+    "email": "jaenulton@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaenulton/chord-id.git"
   },
   "description": "Real-time MIDI chord identification with visual piano display",
   "dependencies": {
