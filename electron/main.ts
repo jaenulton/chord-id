@@ -31,7 +31,10 @@ function createWindow() {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    // In packaged app: main.js is at dist-electron/main/main.js
+    // index.html is at dist/index.html
+    // So we need to go up 2 levels then into dist
+    mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
   }
 
   // Show window when ready
