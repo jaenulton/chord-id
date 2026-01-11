@@ -10,16 +10,27 @@ let isQuitting = false;
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
-function createWindow() {
-  // Enable MIDI permissions
-  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
-    if (permission === 'midi' || permission === 'midiSysex') {
-      callback(true);
-    } else {
-      callback(true); // Allow other permissions too
-    }
+// Enable MIDI and other hardware access via command line switches
+app.commandLine.appendSwitch('enable-web-midi');
+app.commandLine.appendSwitch('enable-experimental-web-platform-features');
+
+function setupPermissions() {
+  // Permission REQUEST handler - when the app requests permission
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback, details) => {
+    console.log('Permission requested:', permission);
+    // Allow all permissions for our app
+    callback(true);
   });
 
+  // Permission CHECK handler - when checking if permission is granted
+  session.defaultSession.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
+    console.log('Permission check:', permission, requestingOrigin);
+    // Return true to indicate permission is granted
+    return true;
+  });
+}
+
+function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -30,6 +41,10 @@ function createWindow() {
       preload: path.join(__dirname, '../preload/preload.mjs'),
       contextIsolation: true,
       nodeIntegration: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      // Enable hardware access
+      experimentalFeatures: true,
     },
     backgroundColor: '#0a0a12',
     show: false, // Show when ready to prevent flash
@@ -161,6 +176,7 @@ ipcMain.handle('check-for-updates', () => {
 
 // App lifecycle
 app.on('ready', () => {
+  setupPermissions(); // Must be called before creating window
   createWindow();
   createTray();
   setupAutoUpdater();
