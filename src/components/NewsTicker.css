@@ -44,6 +44,33 @@
   letter-spacing: 0.5px;
 }
 
+/* Ticker text formatting styles */
+.news-ticker-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.news-ticker-text a:hover {
+  text-decoration-style: solid;
+}
+
+.news-ticker-text b,
+.news-ticker-text strong {
+  font-weight: 700;
+}
+
+.news-ticker-text i,
+.news-ticker-text em {
+  font-style: italic;
+}
+
+.news-ticker-text u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 @keyframes ticker-scroll {
   0% {
     transform: translateX(0);

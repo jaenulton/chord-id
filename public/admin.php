@@ -557,6 +557,83 @@ $pastBanners = array_slice(array_values($pastBanners), 0, 3);
             font-family: inherit;
         }
 
+        /* Ticker Toolbar */
+        .ticker-toolbar {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 0;
+            padding: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .toolbar-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        #ticker-text {
+            border-radius: 0;
+        }
+
+        .ticker-preview {
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            min-height: 40px;
+        }
+
+        .ticker-preview .preview-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-right: 8px;
+        }
+
+        #ticker-preview-content {
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        #ticker-preview-content a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        #ticker-preview-content strong,
+        #ticker-preview-content b {
+            font-weight: bold;
+        }
+
+        #ticker-preview-content em,
+        #ticker-preview-content i {
+            font-style: italic;
+        }
+
+        #ticker-preview-content u {
+            text-decoration: underline;
+        }
+
         input[type="file"] {
             width: 100%;
             padding: 12px;
@@ -902,9 +979,26 @@ $pastBanners = array_slice(array_values($pastBanners), 0, 3);
                 <form id="ticker-form">
                     <div class="form-group">
                         <label for="ticker-text">Ticker Text</label>
-                        <input type="text" id="ticker-text" name="ticker"
-                               value="<?php echo htmlspecialchars($content['ticker'] ?? ''); ?>"
-                               placeholder="Enter scrolling ticker text...">
+                        <div class="ticker-toolbar">
+                            <button type="button" class="toolbar-btn" onclick="formatTicker('bold')" title="Bold (Ctrl+B)">
+                                <strong>B</strong>
+                            </button>
+                            <button type="button" class="toolbar-btn" onclick="formatTicker('italic')" title="Italic (Ctrl+I)">
+                                <em>I</em>
+                            </button>
+                            <button type="button" class="toolbar-btn" onclick="formatTicker('underline')" title="Underline (Ctrl+U)">
+                                <u>U</u>
+                            </button>
+                            <button type="button" class="toolbar-btn" onclick="insertLink()" title="Insert Link">
+                                &#128279;
+                            </button>
+                        </div>
+                        <textarea id="ticker-text" name="ticker" rows="3"
+                                  placeholder="Enter scrolling ticker text... Use the toolbar for formatting."><?php echo htmlspecialchars($content['ticker'] ?? ''); ?></textarea>
+                        <div class="ticker-preview">
+                            <span class="preview-label">Preview:</span>
+                            <span id="ticker-preview-content"></span>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Ticker</button>
                 </form>
@@ -1309,8 +1403,134 @@ $pastBanners = array_slice(array_values($pastBanners), 0, 3);
             }
         }
 
+        // Ticker formatting functions
+        function formatTicker(format) {
+            const textarea = document.getElementById('ticker-text');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+
+            let openTag, closeTag;
+            switch (format) {
+                case 'bold':
+                    openTag = '<b>';
+                    closeTag = '</b>';
+                    break;
+                case 'italic':
+                    openTag = '<i>';
+                    closeTag = '</i>';
+                    break;
+                case 'underline':
+                    openTag = '<u>';
+                    closeTag = '</u>';
+                    break;
+                default:
+                    return;
+            }
+
+            const newText = textarea.value.substring(0, start) + openTag + selectedText + closeTag + textarea.value.substring(end);
+            textarea.value = newText;
+            textarea.focus();
+            textarea.setSelectionRange(start + openTag.length, end + openTag.length);
+            updateTickerPreview();
+        }
+
+        function insertLink() {
+            const textarea = document.getElementById('ticker-text');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+
+            const url = prompt('Enter the URL:', 'https://');
+            if (!url || url === 'https://') return;
+
+            const linkText = selectedText || prompt('Enter link text:', 'Click here');
+            if (!linkText) return;
+
+            const linkHtml = `<a href="${url}" target="_blank">${linkText}</a>`;
+            const newText = textarea.value.substring(0, start) + linkHtml + textarea.value.substring(end);
+            textarea.value = newText;
+            textarea.focus();
+            updateTickerPreview();
+        }
+
+        function updateTickerPreview() {
+            const textarea = document.getElementById('ticker-text');
+            const preview = document.getElementById('ticker-preview-content');
+            // Only allow safe HTML tags
+            const safeHtml = sanitizeTickerHtml(textarea.value);
+            preview.innerHTML = safeHtml || '<em style="color: var(--text-muted)">Type to see preview...</em>';
+        }
+
+        function sanitizeTickerHtml(html) {
+            // Only allow specific safe tags: b, i, u, a, strong, em
+            const allowedTags = ['b', 'i', 'u', 'a', 'strong', 'em'];
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            // Process all elements
+            function processNode(node) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const tagName = node.tagName.toLowerCase();
+                    if (!allowedTags.includes(tagName)) {
+                        // Replace disallowed tag with its text content
+                        const text = document.createTextNode(node.textContent);
+                        node.parentNode.replaceChild(text, node);
+                        return;
+                    }
+                    // Only allow href and target attributes on <a> tags
+                    if (tagName === 'a') {
+                        const href = node.getAttribute('href');
+                        const allowedAttrs = ['href', 'target'];
+                        [...node.attributes].forEach(attr => {
+                            if (!allowedAttrs.includes(attr.name)) {
+                                node.removeAttribute(attr.name);
+                            }
+                        });
+                        // Ensure target is _blank for security
+                        node.setAttribute('target', '_blank');
+                        node.setAttribute('rel', 'noopener noreferrer');
+                    } else {
+                        // Remove all attributes from other tags
+                        [...node.attributes].forEach(attr => {
+                            node.removeAttribute(attr.name);
+                        });
+                    }
+                    // Process children
+                    [...node.childNodes].forEach(processNode);
+                }
+            }
+
+            [...tempDiv.childNodes].forEach(processNode);
+            return tempDiv.innerHTML;
+        }
+
+        // Keyboard shortcuts for ticker formatting
+        document.getElementById('ticker-text').addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key.toLowerCase()) {
+                    case 'b':
+                        e.preventDefault();
+                        formatTicker('bold');
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        formatTicker('italic');
+                        break;
+                    case 'u':
+                        e.preventDefault();
+                        formatTicker('underline');
+                        break;
+                }
+            }
+        });
+
+        // Update preview on input
+        document.getElementById('ticker-text').addEventListener('input', updateTickerPreview);
+
         // Initialize
         checkSession();
+        updateTickerPreview();
     </script>
 </body>
 </html>
