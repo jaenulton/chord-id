@@ -1,0 +1,12 @@
+{
+  "notifications": [
+    {
+      "id": "welcome-chord-id-2026",
+      "title": "Welcome to Chord-ID!",
+      "message": "Connect your MIDI keyboard to start identifying chords in real-time.",
+      "type": "info",
+      "createdAt": "2026-01-11T12:00:00Z",
+      "expiresAt": "2027-12-31T23:59:59Z"
+    }
+  ]
+}

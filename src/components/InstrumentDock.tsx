@@ -141,14 +141,14 @@ export function InstrumentDock({
   return (
     <div
       ref={dockRef}
-      className="relative w-full py-4 px-2"
+      className="relative w-full py-2 px-1"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Dock background - glass effect */}
       <div
-        className="absolute inset-x-4 inset-y-0 rounded-2xl"
+        className="absolute inset-x-2 inset-y-0 rounded-xl"
         style={{
           background: `linear-gradient(180deg, ${theme.colors.surface}80 0%, ${theme.colors.background}90 100%)`,
           backdropFilter: 'blur(10px)',
@@ -175,7 +175,7 @@ export function InstrumentDock({
               initial={false}
               animate={{
                 scale,
-                y: isSelected ? -8 : isHighlighted ? -4 : 0,
+                y: isSelected ? -6 : isHighlighted ? -3 : 0,
               }}
               transition={{
                 type: 'spring',
@@ -185,9 +185,9 @@ export function InstrumentDock({
               whileHover={{ scale: scale * 1.05 }}
               whileTap={{ scale: scale * 0.95 }}
             >
-              {/* Icon container */}
+              {/* Icon container - reduced by 20% */}
               <div
-                className="relative w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shadow-lg"
+                className="relative w-10 h-10 md:w-11 md:h-11 rounded-lg flex items-center justify-center shadow-lg"
                 style={{
                   background: graphics.gradient,
                   border: isSelected
@@ -196,13 +196,13 @@ export function InstrumentDock({
                     ? `2px solid ${theme.colors.primary}60`
                     : '2px solid transparent',
                   boxShadow: isSelected
-                    ? `0 0 20px ${theme.colors.primaryGlow}60, 0 4px 12px rgba(0,0,0,0.3)`
+                    ? `0 0 16px ${theme.colors.primaryGlow}60, 0 3px 10px rgba(0,0,0,0.3)`
                     : isHighlighted
-                    ? `0 0 10px ${theme.colors.primaryGlow}30, 0 4px 8px rgba(0,0,0,0.2)`
-                    : '0 2px 6px rgba(0,0,0,0.2)',
+                    ? `0 0 8px ${theme.colors.primaryGlow}30, 0 3px 6px rgba(0,0,0,0.2)`
+                    : '0 2px 5px rgba(0,0,0,0.2)',
                 }}
               >
-                <span className="text-2xl md:text-3xl">{graphics.icon}</span>
+                <span className="text-xl md:text-2xl">{graphics.icon}</span>
 
                 {/* Glow overlay for selected */}
                 {isSelected && (
@@ -260,14 +260,6 @@ export function InstrumentDock({
         </div>
       )}
 
-      {/* Hint text */}
-      <div
-        className="text-center mt-2 text-xs"
-        style={{ color: theme.colors.textMuted }}
-      >
-        <span className="hidden md:inline">← → Arrow keys to change</span>
-        <span className="md:hidden">Swipe to browse, tap to select</span>
-      </div>
     </div>
   );
 }

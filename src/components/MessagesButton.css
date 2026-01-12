@@ -1,0 +1,267 @@
+/* Messages Button Container */
+.messages-button-container {
+  position: fixed;
+  top: 1rem;
+  right: 4.5rem; /* Position to the LEFT of settings button (which is at right: 1rem with ~48px width) */
+  z-index: 30;
+}
+
+/* Bell Button */
+.messages-button {
+  position: relative;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.messages-button:hover {
+  transform: scale(1.05);
+}
+
+.messages-button:active {
+  transform: scale(0.95);
+}
+
+.messages-bell-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Unread Badge (Red Pill) */
+.messages-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+  line-height: 1;
+}
+
+/* Dropdown */
+.messages-dropdown {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  width: 360px;
+  max-width: calc(100vw - 2rem);
+  border-radius: 1rem;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+}
+
+/* Dropdown Header */
+.messages-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+}
+
+.messages-dropdown-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.messages-mark-all-read {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  transition: opacity 0.2s;
+}
+
+.messages-mark-all-read:hover {
+  opacity: 0.8;
+}
+
+/* Dropdown Content */
+.messages-dropdown-content {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.messages-dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-dropdown-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.messages-dropdown-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Notification List */
+.messages-notification-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Notification Item */
+.messages-notification-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.messages-notification-item.unread:hover {
+  filter: brightness(1.1);
+}
+
+.messages-notification-item.read {
+  cursor: default;
+}
+
+/* Notification Icon */
+.messages-notification-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Notification Content */
+.messages-notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.messages-notification-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.messages-notification-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.messages-unread-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.messages-notification-message {
+  font-size: 0.8125rem;
+  margin: 0.25rem 0 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.messages-notification-time {
+  font-size: 0.6875rem;
+  margin-top: 0.375rem;
+  display: block;
+  opacity: 0.7;
+}
+
+/* Empty State */
+.messages-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+/* Loading Spinner */
+.messages-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid;
+  border-radius: 50%;
+  margin-bottom: 0.75rem;
+  animation: messages-spin 0.8s linear infinite;
+}
+
+@keyframes messages-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dropdown Footer */
+.messages-dropdown-footer {
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .messages-button-container {
+    right: 4rem;
+  }
+
+  .messages-dropdown {
+    width: calc(100vw - 1.5rem);
+    right: -2.5rem;
+  }
+
+  .messages-dropdown-content {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 400px) {
+  .messages-button-container {
+    top: 0.75rem;
+    right: 3.5rem;
+  }
+
+  .messages-button {
+    padding: 0.625rem;
+  }
+
+  .messages-bell-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .messages-badge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+}

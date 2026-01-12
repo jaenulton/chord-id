@@ -1,0 +1,15 @@
+{
+  "polls": [
+    {
+      "id": 1,
+      "question": "What's your favorite chord type?",
+      "options": ["Major", "Minor", "7th", "Diminished"],
+      "vote_counts": [12, 8, 15, 3],
+      "total_votes": 38,
+      "user_voted": false,
+      "user_vote_index": null,
+      "expires_at": "2027-12-31T23:59:59Z",
+      "is_active": true
+    }
+  ]
+}

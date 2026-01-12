@@ -12,7 +12,7 @@ export function ChordDisplay({ chord, theme, activeNotes }: ChordDisplayProps) {
   const noteCount = activeNotes.size;
 
   return (
-    <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20">
+    <div className="absolute top-[58px] left-[30px] z-20">
       <AnimatePresence mode="wait">
         {chord ? (
           <motion.div
@@ -21,18 +21,18 @@ export function ChordDisplay({ chord, theme, activeNotes }: ChordDisplayProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="glass rounded-2xl px-8 py-4 text-center"
+            className="glass rounded-xl px-6 py-3 text-center"
             style={{
-              boxShadow: `0 0 40px ${theme.colors.primaryGlow}30, 0 0 80px ${theme.colors.primaryGlow}15`,
+              boxShadow: `0 0 32px ${theme.colors.primaryGlow}30, 0 0 64px ${theme.colors.primaryGlow}15`,
               borderColor: `${theme.colors.primary}40`,
             }}
           >
-            {/* Chord symbol */}
+            {/* Chord symbol - reduced from text-5xl to text-4xl (20% smaller) */}
             <motion.div
-              className="text-5xl font-bold tracking-tight"
+              className="text-4xl font-bold tracking-tight"
               style={{
                 color: theme.colors.primary,
-                textShadow: `0 0 20px ${theme.colors.primaryGlow}, 0 0 40px ${theme.colors.primaryGlow}60`,
+                textShadow: `0 0 16px ${theme.colors.primaryGlow}, 0 0 32px ${theme.colors.primaryGlow}60`,
               }}
               animate={{
                 scale: [1, 1.02, 1],
@@ -44,21 +44,21 @@ export function ChordDisplay({ chord, theme, activeNotes }: ChordDisplayProps) {
 
             {/* Chord type label */}
             <div
-              className="text-sm mt-2 font-medium uppercase tracking-widest"
+              className="text-xs mt-1.5 font-medium uppercase tracking-widest"
               style={{ color: theme.colors.textMuted }}
             >
               {formatChordType(chord.type)}
             </div>
 
             {/* Notes being played */}
-            <div className="flex gap-2 justify-center mt-3">
+            <div className="flex gap-1.5 justify-center mt-2">
               {chord.notes.map((note, i) => (
                 <motion.span
                   key={`${note}-${i}`}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.05 }}
-                  className="px-2 py-1 rounded text-xs font-mono"
+                  className="px-1.5 py-0.5 rounded text-[10px] font-mono"
                   style={{
                     backgroundColor: `${theme.colors.primary}20`,
                     color: theme.colors.primary,
@@ -76,34 +76,23 @@ export function ChordDisplay({ chord, theme, activeNotes }: ChordDisplayProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="glass rounded-2xl px-6 py-3 text-center"
+            className="glass rounded-xl px-5 py-2 text-center"
             style={{ borderColor: `${theme.colors.primary}20` }}
           >
             <div
-              className="text-xl font-medium"
+              className="text-lg font-medium"
               style={{ color: theme.colors.textMuted }}
             >
               {noteCount === 1 ? 'Single Note' : `${noteCount} Notes`}
             </div>
             <div
-              className="text-xs mt-1"
+              className="text-[10px] mt-0.5"
               style={{ color: theme.colors.textMuted }}
             >
               {noteCount < 3 ? 'Add more notes to form a chord' : 'Chord not recognized'}
             </div>
           </motion.div>
-        ) : (
-          <motion.div
-            key="waiting"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            exit={{ opacity: 0 }}
-            className="text-center"
-            style={{ color: theme.colors.textMuted }}
-          >
-            <div className="text-lg font-medium">Play some notes...</div>
-          </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </div>
   );

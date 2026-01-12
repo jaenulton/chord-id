@@ -219,14 +219,14 @@ export function Piano2D({ activeNotes, theme }: Piano2DProps) {
       <div
         className="relative w-full h-full"
         style={{
-          padding: isMobileLandscape ? '4px 2px 2px 2px' : '24px 24px 24px 24px',
-          paddingTop: isMobileLandscape ? '4px' : '32px',
+          padding: isMobileLandscape ? '4px 2px 2px 2px' : '8px 8px 8px 8px',
+          paddingTop: isMobileLandscape ? '4px' : '12px',
         }}
       >
         <div
           className="relative w-full rounded-lg overflow-hidden"
           style={{
-            height: isMobileLandscape ? '100%' : '85%',
+            height: isMobileLandscape ? '100%' : '95%',
             background: '#2a2a2a',
             boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)',
             padding: isMobileLandscape ? '4px 2px 2px 2px' : '8px 4px 4px 4px',

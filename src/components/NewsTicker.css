@@ -1,0 +1,147 @@
+/* News Ticker Container - centered in header */
+/* Total height: 40px (ticker) + 80px (banner) = 120px */
+.news-ticker-container {
+  width: 600px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.news-ticker-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Ticker Section - top 40px */
+.news-ticker-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.news-ticker-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.news-ticker-text {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: ticker-scroll 20s linear infinite;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.news-ticker-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+}
+
+/* Banner Section - bottom 160px */
+.news-banner-section {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.news-banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.news-banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 0 8px 8px;
+  transition: opacity 0.2s ease;
+}
+
+.news-banner-link:hover .news-banner-image {
+  opacity: 0.9;
+}
+
+.news-banner-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .news-ticker-container {
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    padding: 0 16px;
+  }
+
+  .news-ticker-wrapper {
+    height: auto;
+  }
+
+  .news-ticker-section {
+    height: 32px !important;
+  }
+
+  .news-ticker-text {
+    font-size: 12px;
+    animation-duration: 15s;
+  }
+
+  .news-banner-section {
+    height: 120px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-ticker-container {
+    padding: 0 8px;
+    min-height: 120px;
+  }
+
+  .news-ticker-section {
+    height: 28px !important;
+  }
+
+  .news-ticker-text {
+    font-size: 11px;
+    animation-duration: 12s;
+  }
+
+  .news-banner-section {
+    height: 90px !important;
+  }
+}

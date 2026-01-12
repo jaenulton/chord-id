@@ -4,9 +4,17 @@ import { Piano2D } from './components/Piano2D';
 import { Piano3D } from './components/Piano3D';
 import { ChordDisplay } from './components/ChordDisplay';
 import { Settings, SettingsButton } from './components/Settings';
+import { MessagesButton } from './components/MessagesButton';
 import { InstrumentDock } from './components/InstrumentDock';
+import { NewsTicker } from './components/NewsTicker';
+import { ToastContainer } from './components/ToastNotification';
+import { PollContainer } from './components/PollCard';
+import { NotificationProvider } from './context/NotificationContext';
+import { WebSocketProvider } from './context/WebSocketContext';
 import { useMidi } from './hooks/useMidi';
 import { useAudio } from './hooks/useAudio';
+import { useNotifications } from './hooks/useNotifications';
+import { usePolls } from './hooks/usePolls';
 import { getTheme } from './themes';
 import { detectChord } from './utils/chordDetection';
 import { DEFAULT_INSTRUMENT_ID, DEFAULT_VOLUME } from './audio/instruments';
@@ -158,13 +166,23 @@ function saveSettings(settings: AppSettings) {
   }
 }
 
-function App() {
+// Component that initializes notification fetching
+function NotificationFetcher() {
+  // Fetch notifications from API every 30 seconds
+  useNotifications({ pollInterval: 30000, enabled: true });
+  return null;
+}
+
+function AppContent() {
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileLandscape, setIsMobileLandscape] = useState(false);
 
   // Electron auto-updates
   const updates = useElectronUpdates();
+
+  // Get theme for ToastContainer
+  const theme = useMemo(() => getTheme(settings.themeId), [settings.themeId]);
 
   // Detect mobile landscape mode
   useLayoutEffect(() => {
@@ -184,8 +202,6 @@ function App() {
     };
   }, []);
 
-  const theme = useMemo(() => getTheme(settings.themeId), [settings.themeId]);
-
   // Pull-to-refresh
   const { pullDistance, isRefreshing } = usePullToRefresh(80);
 
@@ -202,6 +218,9 @@ function App() {
   }, [audio.stopNote]);
 
   const midi = useMidi({ onNoteOn, onNoteOff });
+
+  // Polls
+  const { polls, vote: votePoll, dismissPoll } = usePolls();
 
   // Detect chord from active notes
   const detectedChord = useMemo(
@@ -296,18 +315,30 @@ function App() {
       )}
 
       {/* Header */}
-      <header className="relative z-10 px-6 pt-4 pb-2">
-        <motion.h1
-          className="text-2xl font-bold tracking-tight text-center"
-          style={{
-            color: theme.colors.primary,
-            textShadow: `0 0 30px ${theme.colors.primaryGlow}60`,
-          }}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          Chord-ID
-        </motion.h1>
+      <header className="relative z-10 pt-4 pb-2">
+        <div className="flex items-start justify-between">
+          {/* Title on the left with 30px padding */}
+          <motion.h1
+            className="text-2xl font-bold tracking-tight"
+            style={{
+              color: theme.colors.primary,
+              textShadow: `0 0 30px ${theme.colors.primaryGlow}60`,
+              paddingLeft: '30px',
+            }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            Chord-ID
+          </motion.h1>
+
+          {/* Centered news ticker container */}
+          <div className="flex-1 flex justify-center">
+            <NewsTicker theme={theme} />
+          </div>
+
+          {/* Spacer for settings button area (button is fixed positioned) */}
+          <div style={{ width: '80px' }} />
+        </div>
       </header>
 
       {/* Chord Display */}
@@ -318,7 +349,7 @@ function App() {
       />
 
       {/* Piano Visualization */}
-      <main className="flex-1 px-4 pb-4 pt-24 min-h-0">
+      <main className="flex-1 px-2 pb-2 pt-16 min-h-0">
         <motion.div
           className="h-full"
           initial={{ opacity: 0, y: 20 }}
@@ -344,7 +375,7 @@ function App() {
       )}
 
       {/* Status Bar */}
-      <footer className="px-6 py-3 flex items-center justify-center gap-4">
+      <footer className="px-4 py-2 flex items-center justify-center gap-4">
         {/* Step 1: Enable Audio (required for Web Audio API) */}
         {!audio.isEnabled ? (
           <motion.button
@@ -400,6 +431,9 @@ function App() {
           {midi.error || audio.error}
         </motion.div>
       )}
+
+      {/* Messages Button (to the left of Settings) */}
+      <MessagesButton theme={theme} />
 
       {/* Settings Button */}
       <SettingsButton onClick={() => setIsSettingsOpen(true)} theme={theme} />
@@ -461,7 +495,32 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Polls - displayed on left side */}
+      <PollContainer
+        polls={polls}
+        theme={theme}
+        onVote={votePoll}
+        onDismiss={dismissPoll}
+      />
+
+      {/* Toast Notifications */}
+      <ToastContainer theme={theme} position="top-right" maxVisible={5} />
+
+      {/* Background notification fetcher */}
+      <NotificationFetcher />
     </div>
+  );
+}
+
+// Main App component wrapped with providers
+function App() {
+  return (
+    <WebSocketProvider>
+      <NotificationProvider>
+        <AppContent />
+      </NotificationProvider>
+    </WebSocketProvider>
   );
 }
 
